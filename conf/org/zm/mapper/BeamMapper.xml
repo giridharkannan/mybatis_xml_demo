@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zm.mapper.BeamMapper">
+        <resultMap id="result" type="Beam">
+                <id property='id' column='id'/>
+                <result property='ctime' column='ctime'/>
+		<result property='content' column='content'/>
+	</resultMap>
+
+        <select id="get" parameterType="map" resultMap="result">
+                SELECT * FROM ${table} WHERE id = #{id}
+        </select>
+
+        <select id="getRange" parameterType="map" resultMap="result">
+                SELECT * FROM ${table} WHERE id>=#{start} ORDER BY id LIMIT #{limit}
+        </select>
+
+	<insert id="create" parameterType="map" useGeneratedKeys='true' keyProperty='beam.id'>
+		INSERT INTO ${table} (ctime, content) VALUES (#{beam.ctime}, #{beam.content})
+	</insert>
+
+	<delete id="delete" parameterType="map">
+		DELETE FROM ${table} WHERE id=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="org.zm.mapper.DBShardMapper">
+        <resultMap id="result" type="DBShard">
+                <id property='id' column='id'/>
+                <result property='driver' column='driver'/>
+		<result property='url' column='url'/>
+		<result property='usr' column='usr'/>
+		<result property='passwd' column='passwd'/>
+		<result property='weight' column='weight'/>
+	</resultMap>
+
+        <select id="get" parameterType="_long" resultMap="result">
+                SELECT * FROM DBShard WHERE id = #{id}
+        </select>
+
+        <update id="incAndGetFree" useGeneratedKeys='true' keyProperty='id'>
+                UPDATE DBShard SET weight=weight+1 WHERE id = (SELECT id FROM DBShard GROUP BY id HAVING weight=MIN(weight)
+		ORDER BY weight LIMIT 1)
+        </update>
+
+	<select id="getForUser" parameterType="_long">
+		SELECT * FROM DBShard WHERE id=(SELECT shard FROM UserAccount WHERE id=${id})
+	</select>
+</mapper>
